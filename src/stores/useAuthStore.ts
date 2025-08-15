@@ -3,11 +3,13 @@ import { persist } from 'zustand/middleware';
 import { getMe, login as loginApi, LoginDto } from '@/services/auth';
 
 type User = {
+  id: number;
   username: string;
   token: string;
   role: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
+  status: string;
   email: string;
 };
 
@@ -16,6 +18,7 @@ type AuthState = {
   loading: boolean;
   error: string | null;
   hydrated: boolean;
+  setUser: (user: User) => void;
   setHydrated: (value: boolean) => void;
   login: (credentials: LoginDto) => Promise<void>;
   logout: () => void;
@@ -31,6 +34,8 @@ export const useAuthStore = create<AuthState>()(
 
       setHydrated: (value) => set({ hydrated: value }),
 
+      setUser: (user) => set({ user }),
+
       login: async (credentials) => {
         set({ loading: true, error: null });
         try {
@@ -42,12 +47,14 @@ export const useAuthStore = create<AuthState>()(
           const userProfile = meRes.data.user;
 
           const user: User = {
+            id: userProfile.id,
             username: credentials.username,
             token: accessToken,
             role: userProfile.role,
             firstName: userProfile.first_name,
             lastName: userProfile.last_name,
             email: userProfile.email,
+            status: userProfile.status,
           };
           set({ user, loading: false });
         } catch (err: any) {

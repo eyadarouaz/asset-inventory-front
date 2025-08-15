@@ -1,4 +1,4 @@
-# Company Management Frontend
+# Infrastructure Orchestrator Frontend
 
 
 ## 🛠️ Prerequisites
@@ -15,8 +15,8 @@ Before starting, make sure you have:
 ### 1. Clone the repository
 
 ```bash
-git clone https://gitlab.com/company_management1/company_management_front.git
-cd company_management_front
+git clone https://github.com/eyadarouaz/asset-inventory-front.git
+cd asset-inventory-front
 ```
 
 ### 2. Install dependencies
@@ -28,7 +28,7 @@ npm install
 ### 3. Add environment variables
 
 ```bash
-NEXT_PUBLIC_API_URL=http://backend-api
+NEXT_PUBLIC_API_URL=http://your-backend-api
 ```
 
 ### 4. Run the development server

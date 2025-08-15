@@ -48,9 +48,9 @@ const Select: React.FC<SelectProps> = ({
         {placeholder}
       </option>
 
-      {options.map((option) => (
+      {options.map((option, idx) => (
         <option
-          key={option.value}
+          key={`${option.value}-${idx}`}  // <-- use value + index to guarantee uniqueness
           value={option.value}
           className="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
         >

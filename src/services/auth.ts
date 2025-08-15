@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios from "@/utils/axios";
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -9,7 +10,6 @@ export type LoginDto = {
 
 export const login = async (dto: LoginDto) => {
   const res = await axios.post(`${API_URL}/login/`, dto);
-  console.log("Login API response:", res);
   return res;
 }
 
