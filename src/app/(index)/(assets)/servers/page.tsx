@@ -6,7 +6,7 @@ import ServersTable from "@/components/tables/ServersTable";
 import Button from "@/components/ui/button/Button";
 import { PlusIcon } from "@/icons";
 import ServerModal from "@/components/modals/ServerModal";
-import { createServer, Datacenter, getAllDatacenters, getAllServers, Server } from "@/services/asset";
+import { Cluster, createServer, Datacenter, getAllClusters, getAllDatacenters, getAllNetworks, getAllServers, Network, Server } from "@/services/asset";
 import { useAuthStore } from "@/stores/useAuthStore";
 import Alert from "@/components/ui/alert/Alert";
 import { useModal } from "@/hooks/useModal";
@@ -25,6 +25,8 @@ export default function Servers() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [servers, setServers] = useState<Server[]>([]);
   const [datacenters, setDatacenters] = useState<Datacenter[]>([]);
+  const [clusters, setClusters] = useState<Cluster[]>([]);
+  const [networks, setNetworks] = useState<Network[]>([]);
   const { isOpen, openModal, closeModal } = useModal();
 
   const fetchServers = async () => {
@@ -41,9 +43,31 @@ export default function Servers() {
     if (!token) return;
     try {
       const dcRes = await getAllDatacenters(token);
+      console.log(dcRes)
       setDatacenters(dcRes.data || []);
     } catch (error) {
       console.error("Failed to load datacenters", error);
+    }
+  };
+
+  const fetchClusters = async () => {
+    if (!token) return;
+    try {
+      const clRes = await getAllClusters(token);
+      setClusters(clRes.data || []);
+    } catch (error) {
+      console.error("Failed to load clusters", error);
+    }
+  };
+
+  const fetchNetworks = async () => {
+    if (!token) return;
+    try {
+      const netRes = await getAllNetworks(token);
+      console.log("Networks:", netRes);
+      setNetworks(netRes.data || []);
+    } catch (error) {
+      console.error("Failed to load networks", error);
     }
   };
 
@@ -51,6 +75,8 @@ export default function Servers() {
     if (!token) return;
     fetchServers();
     fetchDatacenters();
+    fetchClusters();
+    fetchNetworks();
   }, [token]);
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -110,6 +136,8 @@ export default function Servers() {
         <ServersTable
           servers={servers}
           datacenters={datacenters}
+          clusters={clusters}
+          networks={networks}
           refreshServers={fetchServers}
         />
       </div>
@@ -118,6 +146,8 @@ export default function Servers() {
         onClose={handleCloseModal}
         mode="create"
         datacenters={datacenters}
+        clusters={clusters}
+        networks={networks}
         onSubmit={handleCreate}
       />
     </div>

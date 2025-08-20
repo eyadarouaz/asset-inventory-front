@@ -7,7 +7,7 @@ import Input from '../form/input/InputField';
 import Select from '../form/Select';
 import Radio from '../form/input/Radio';
 import Button from '../ui/button/Button';
-import { Datacenter, Server } from '@/services/asset';
+import { Cluster, Datacenter, Network, Server } from '@/services/asset';
 import { assetStatusLabels } from '@/services/asset';
 import { ChevronDownIcon } from '@/icons';
 
@@ -16,6 +16,8 @@ type ServerModalProps = {
   onClose: () => void;
   mode: 'create' | 'edit';
   datacenters: Datacenter[];
+  clusters: Cluster[];
+  networks: Network[];
   initialData?: Partial<Server>;
   onSubmit: (data: Partial<Server>) => Promise<void>;
   onDelete?: (id: number) => void;
@@ -26,12 +28,24 @@ export default function ServerModal({
   onClose,
   mode,
   datacenters,
+  clusters,
+  networks,
   initialData,
   onSubmit,
   onDelete,
 }: ServerModalProps) {
   const [formData, setFormData] = useState<Partial<Server>>(initialData || {});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const selectedDatacenterId = formData.datacenter;
+
+  const filteredClusters = clusters.filter(
+    cluster => cluster.datacenter === selectedDatacenterId
+  );
+
+  const filteredNetworks = networks.filter(
+    network => network.datacenter == selectedDatacenterId
+  );
 
   useEffect(() => {
     if (initialData) {
@@ -48,6 +62,11 @@ export default function ServerModal({
       // If status changed and it's not 'in_use', clear IP address
       if (field === 'status' && value !== 'in_use') {
         updated.ip_address = '';
+      }
+
+      if (field === 'datacenter') {
+        updated.cluster = undefined;
+        updated.network = undefined;
       }
 
       return updated;
@@ -129,6 +148,40 @@ export default function ServerModal({
                   onChange={val =>
                     handleChange('datacenter', Number(val) as any)
                   }
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400">
+                  <ChevronDownIcon />
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <Label>Cluster</Label>
+              <div className="relative">
+                <Select
+                  options={filteredClusters.map(cluster => ({
+                    value: cluster.id,
+                    label: cluster.name,
+                  }))}
+                  value={formData.cluster ?? ''}
+                  onChange={val => handleChange('cluster', Number(val) as any)}
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400">
+                  <ChevronDownIcon />
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <Label>Network</Label>
+              <div className="relative">
+                <Select
+                  options={filteredNetworks.map(net => ({
+                    value: net.id,
+                    label: `${net.name} (${net.cidr})`,
+                  }))}
+                  value={formData.network ?? ''}
+                  onChange={val => handleChange('network', Number(val) as any)}
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500 dark:text-gray-400">
                   <ChevronDownIcon />

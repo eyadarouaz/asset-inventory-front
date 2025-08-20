@@ -11,10 +11,10 @@ import ServerModal from '../modals/ServerModal';
 import {
   Server,
   Datacenter,
-  getAllServers,
-  getAllDatacenters,
   updateServer,
   deleteServer,
+  Cluster,
+  Network,
 } from '@/services/asset';
 import { assetStatusLabels } from '@/services/asset';
 import Alert from '../ui/alert/Alert';
@@ -22,10 +22,12 @@ import Alert from '../ui/alert/Alert';
 type ServersTableProps = {
   servers: Server[];
   datacenters: Datacenter[];
+  clusters: Cluster[];
+  networks: Network[];
   refreshServers: () => Promise<void>;
 };
 
-export default function ServersTable({ servers, datacenters, refreshServers }: ServersTableProps) {
+export default function ServersTable({ servers, datacenters, clusters, networks, refreshServers }: ServersTableProps) {
   const [selectedServer, setSelectedServer] = useState<Server | null>(null);
 
   const { isOpen, openModal, closeModal } = useModal();
@@ -270,6 +272,8 @@ export default function ServersTable({ servers, datacenters, refreshServers }: S
             onClose={closeModal}
             mode="edit"
             datacenters={datacenters}
+            clusters={clusters}
+            networks={networks}
             initialData={selectedServer || undefined}
             onSubmit={handleSubmit}
             onDelete={handleDelete}

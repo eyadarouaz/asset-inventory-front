@@ -67,6 +67,126 @@ export const deleteDatacenter = (
   });
 };
 
+// CLUSTER
+
+export interface Cluster {
+  id: number;
+  name: string;
+  description: string;
+  datacenter: number;
+}
+
+export const getAllClusters = (token: string): Promise<{ data: Cluster[] }> => {
+  return axios.get(`${API_URL}/clusters/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getClusterById = (token: string, clId: number): Promise<{ data: Cluster }> => {
+  return axios.get(`${API_URL}/clusters/${clId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createCluster = (
+  token: string,
+  clData: Omit<Cluster, 'id'>
+): Promise<{ data: Cluster }> => {
+  return axios.post(`${API_URL}/clusters/`, clData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+};
+
+export const updateCluster = (
+  token: string,
+  clId: number,
+  updatedData: Partial<Cluster>
+): Promise<{ data: Cluster }> => {
+  return axios.patch(`${API_URL}/clusters/${clId}/`, updatedData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const deleteCluster = (
+  token: string,
+  clId: number
+): Promise<void> => {
+  return axios.delete(`${API_URL}/clusters/${clId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+// NETWORK
+
+
+export interface Network {
+  id: number;
+  name: string;
+  cidr: string;
+  datacenter: number;
+}
+
+export const getAllNetworks = (token: string): Promise<{ data: Network[] }> => {
+  return axios.get(`${API_URL}/networks/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getNetworkById = (token: string, netId: number): Promise<{ data: Network }> => {
+  return axios.get(`${API_URL}/networks/${netId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createNetwork = (
+  token: string,
+  netData: Omit<Network, 'id'>
+): Promise<{ data: Network }> => {
+  return axios.post(`${API_URL}/networks/`, netData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+};
+
+export const updateNetwork = (
+  token: string,
+  netId: number,
+  updatedData: Partial<Network>
+): Promise<{ data: Network }> => {
+  return axios.patch(`${API_URL}/networks/${netId}/`, updatedData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const deleteNetwork = (
+  token: string,
+  netId: number
+): Promise<void> => {
+  return axios.delete(`${API_URL}/networks/${netId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 // SERVER
 
@@ -81,6 +201,8 @@ export interface Server {
   storage: number;
   ip_address: string;
   datacenter: number;
+  cluster: number;
+  network: number;
 }
 
 export const getAllServers = (token: string): Promise<{ data: Server[] }> => {
