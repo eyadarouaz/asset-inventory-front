@@ -34,8 +34,6 @@ const navItems: NavItem[] = [
     name: "Dashboard",
     subItems: [
       { name: "Overview", path: "/", pro: false },
-      { name: "Recent Deployments", path: "/recent", pro: false },
-      { name: "Metrics", path: "/metrics", pro: false },
     ],
   },
   {

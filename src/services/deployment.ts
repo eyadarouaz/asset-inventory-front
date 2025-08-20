@@ -23,6 +23,14 @@ export const getAllDeployments = (token: string): Promise<{ data: DeploymentJob[
     });
 };
 
+export const getDeploymentLogs = (token: string, jobId: number): Promise<{ logs: string }> => {
+    return axios.get(`${API_URL}/deployments/${jobId}/logs/`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }).then(res => res.data);
+};
+
 export const createDeploymentJob = (
     token: string,
     data: Omit<DeploymentJob, 'id'>
